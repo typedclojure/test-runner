@@ -56,6 +56,9 @@ You may also supply any of the additional command line options:
   -v, --var SYMBOL             Symbol indicating the fully qualified name of a specific test.
   -i, --include KEYWORD        Run only tests that have this metadata keyword.
   -e, --exclude KEYWORD        Exclude tests with this metadata keyword.
+  -w, --with-output SYMBOL     Symbol indicating the with output wrapper.
+                               Defaults to clojure.test/with-output.
+                               (e.g. clojure.test.junit/with-junit-output)
   -H, --test-help              Display this help message
 ```
 

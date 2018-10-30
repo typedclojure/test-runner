@@ -106,9 +106,9 @@
    ["-e" "--exclude KEYWORD" "Exclude tests with this metadata keyword."
     :parse-fn parse-kw
     :assoc-fn accumulate]
-   ["-w" "--with-output SYMBOL" "Symbol indicating the with output wrapper."
+   ["-w" "--with-output SYMBOL" "Symbol indicating the with output wrapper. Defaults to clojure.test/with-output."
     :parse-fn symbol]
-   ["-o" "--output STRING" "String indicating path to file to write output to."]
+   ["-o" "--output STRING" "String indicating file path to write test output to."]
    ["-H" "--test-help" "Display this help message"]])
 
 (defn- help
