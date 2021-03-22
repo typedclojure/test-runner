@@ -50,12 +50,6 @@
         (alter-meta! var #(-> %
                               (assoc :test (::test %))
                               (dissoc ::test)))))))
-
-(defn- require-and-resolve
-  [sym]
-  (require (symbol (namespace sym)))
-  (resolve sym))
-
 (defn test
   [options]
   (let [dirs (or (:dir options)
@@ -63,19 +57,12 @@
         nses (->> dirs
                   (map io/file)
                   (mapcat find/find-namespaces-in-dir))
-        nses (filter (ns-filter options) nses)
-        with-output (require-and-resolve
-                      (:with-output options 'clojure.test/with-test-out))]
-    (when (not with-output)
-      (throw (ex-info "Specified with-output not found" {})))
+        nses (filter (ns-filter options) nses)]
     (println (format "\nRunning tests in %s" dirs))
     (dorun (map require nses))
     (try
       (filter-vars! nses (var-filter options))
-      (binding [test/*test-out* (if (:output options)
-                                  (java.io.FileWriter. (:output options))
-                                  test/*test-out*)]
-        (eval `(~with-output (apply test/run-tests (quote ~nses)))))
+      (apply test/run-tests nses)
       (finally
         (restore-vars! nses)))))
 
@@ -106,9 +93,6 @@
    ["-e" "--exclude KEYWORD" "Exclude tests with this metadata keyword."
     :parse-fn parse-kw
     :assoc-fn accumulate]
-   ["-w" "--with-output SYMBOL" "Symbol indicating the with output wrapper. Defaults to clojure.test/with-output."
-    :parse-fn symbol]
-   ["-o" "--output STRING" "String indicating file path to write test output to."]
    ["-H" "--test-help" "Display this help message"]])
 
 (defn- help
